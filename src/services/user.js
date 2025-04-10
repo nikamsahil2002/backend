@@ -1,7 +1,7 @@
 const db = require("../models");
-const { ValidationError, DataNotFoundError, BadRequestError, ForbiddenRequestError } = require("../../utiles/customError");
+const { ValidationError, DataNotFoundError, BadRequestError, ForbiddenRequestError } = require("../../utils/customError");
 const { ObjectId } = require("mongoose").Types;
-const handleSuccess = require('../../utiles/successHandler');
+const handleSuccess = require('../../utils/successHandler');
 const { default: mongoose } = require("mongoose");
 
 exports.createUser = async (userData) => {

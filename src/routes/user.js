@@ -1,11 +1,11 @@
 const router = require("express").Router();
-const { errorWrapper } = require("../../utiles/errorWrapper");
+const { errorWrapper } = require("../../utils/errorWrapper");
 const { validateAddUser, validateUpdateUser } = require("../../validators/user");
-const { validationError } = require('../../utiles/validationError');
+const { validationError } = require('../../utils/validationError');
 
 const { insertUser, retrieveUser, retrieveUserById, modifyUser, removeUser } = require("../controllers/user");
-const checkAuth  = require("../middleWares/checkAuth");
-const checkPermission  = require("../middleWares/checkPermission");
+const checkAuth  = require("../middlewares/checkAuth");
+const checkPermission  = require("../middlewares/checkPermission");
 
 router.post("/",/* checkAuth, checkPermission,*/ validateAddUser, validationError, errorWrapper(insertUser));
 router.get("/",/* checkAuth, checkPermission, */errorWrapper(retrieveUser));
