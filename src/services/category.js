@@ -34,7 +34,7 @@ exports.getAllCategories = async (query) => {
   const sortObject = {};
   sortObject[sortField] =  sortOrder;
 
-  const categoryData = await commonFunction.findAll(db.category, sortObject, skip, limit, projectFields, []);
+  const categoryData = await commonFunction.findAll(db.category, searchQuery, sortObject, skip, limit, projectFields, []);
 
   const totalResponses = categoryData[0]?.totalResponses || 0;
   const result = categoryData[0]?.result || [];

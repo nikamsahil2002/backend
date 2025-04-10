@@ -7,67 +7,22 @@ const {
 } = require("../../utils/customError");
 
 exports.createTask = async (body) => {
-  const {
-    title,
-    description,
-    status,
-    category,
-    project,
-    dueDate,
-    assignedTo,
-    recurrence,
-    media,
-    priority,
-    estimatedTime,
-  } = body;
-
-  const task = await db.task.create({
-    title,
-    description,
-    status,
-    category,
-    project,
-    dueDate,
-    recurrence,
-    media,
-    assignedTo,
-    priority,
-    estimatedTime,
-  });
-
-  if (!task) {
-    throw new BadRequestError("Failed to create task");
-  }
-
-  return handleSuccess("Task created Successfully");
+  const task = await db.task.create(body);
+  if (!task) throw new BadRequestError("Failed to create task");
+  return handleSuccess("Task created successfully");
 };
 
 exports.getAllTasks = async (query) => {
   const pageNumber = parseInt(query.pageNumber) || 1;
   const limit = parseInt(query.limit) || 10;
   const skip = (pageNumber - 1) * limit;
-  const assignedTo = query.assignedTo;
-  const project = query.project;
-  const category = query.category;
-  const status = query.status;
-  const search = query.search || "";
+  const { assignedTo, project, category, status, search = "" } = query;
 
   const conditions = {};
-  if (assignedTo) {
-    conditions["assignedTo"] = new ObjectId(assignedTo);
-  }
-
-  if (project) {
-    conditions["project"] = new ObjectId(project);
-  }
-
-  if (category) {
-    conditions["category"] = new ObjectId(category);
-  }
-
-  if (status) {
-    conditions["status"] = status;
-  }
+  if (assignedTo) conditions["assignedTo"] = new ObjectId(assignedTo);
+  if (project) conditions["project"] = new ObjectId(project);
+  if (category) conditions["category"] = new ObjectId(category);
+  if (status) conditions["status"] = status;
 
   const searchQuery = {
     $and: [
@@ -108,18 +63,8 @@ exports.getAllTasks = async (query) => {
         as: "project",
       },
     },
-    {
-      $unwind: {
-        path: "$category",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $unwind: {
-        path: "$project",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
+    { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+    { $unwind: { path: "$project", preserveNullAndEmptyArrays: true } },
     {
       $match: { ...searchQuery, deletedAt: null },
     },
@@ -127,7 +72,7 @@ exports.getAllTasks = async (query) => {
       $facet: {
         totalResponses: [{ $count: "count" }],
         result: [
-          { $sort: { created: -1 } },
+          { $sort: { createdAt: -1 } },
           { $skip: skip },
           { $limit: limit },
           {
@@ -159,9 +104,8 @@ exports.getAllTasks = async (query) => {
   const totalResponses = tasks[0]?.totalResponses || 0;
   const result = tasks[0]?.result || [];
 
-  if (result.length == 0) {
-    throw new DataNotFoundError("No Tasks found");
-  }
+  if (result.length === 0) throw new DataNotFoundError("No tasks found");
+
   const data = {
     pageNumber,
     limit,
@@ -173,79 +117,33 @@ exports.getAllTasks = async (query) => {
 };
 
 exports.getTaskById = async (_id) => {
-    const result = await db.task.findById(_id);
-
-    if (!result) {
-        throw new DataNotFoundError("Task not found");
-    }
-
-    return handleSuccess("Task fetched successfully", _id);
-}
-
+  const result = await db.task.findById(_id);
+  if (!result) throw new DataNotFoundError("Task not found");
+  return handleSuccess("Task fetched successfully", result);
+};
 
 exports.updateTaskById = async (_id, body) => {
-    const updateObject = {};
-    const { 
-        title,
-        description,
-        status,
-        category,
-        project,
-        dueDate,
-        assignedTo,
-        media,
-        priority,
-        estimatedTime 
-    } = body;
-
-    if (title) updateObject.title = title;
-    if (description) updateObject.description = description;
-    if (status) updateObject.status = status;
-    if (category) updateObject.category = category;
-    if (project) updateObject.project = project;
-    if (dueDate) updateObject.dueDate = dueDate;
-    if (assignedTo) updateObject.assignedTo = assignedTo;
-    if (media) updateObject.media = media;
-    if (priority) updateObject.priority = priority;
-    if (estimatedTime) updateObject.estimatedTime = estimatedTime;
-    
-
-    const result = await db.task.findByIdAndUpdate(
-        _id, 
-        updateObject, 
-        { new: true }
-    );
-
-    if (!result) {
-        throw new BadRequestError("Failed to update task");
-    }
-
-    return handleSuccess("Task updated successfully");
-}
-
+  const result = await db.task.findByIdAndUpdate(_id, body, { new: true });
+  if (!result) throw new BadRequestError("Failed to update task");
+  return handleSuccess("Task updated successfully", result);
+};
 
 exports.deleteTaskById = async (_id) => {
-    const result = await db.task.findByIdAndUpdate(
-        _id,
-        { deletedAt: new Date() },
-        { new: true }
-    ); 
-    if (!result) {
-        throw new BadRequestError("Failed to delete task");
-    }
-    return handleSuccess("Task deleted successfully");
-}
+  const result = await db.task.findByIdAndUpdate(
+    _id,
+    { deletedAt: new Date() },
+    { new: true }
+  );
+  if (!result) throw new BadRequestError("Failed to delete task");
+  return handleSuccess("Task deleted successfully");
+};
 
 exports.completeTask = async (_id) => {
-    const result = await db.task.findByIdAndUpdate(
-        _id,
-        { status: "done", completedAt: new Date() },
-        { new: true }
-    );
-
-    if (!result) {
-        throw new BadRequestError("Failed to complete task");
-    }
-
-    return handleSuccess("Task completed successfully");
-}
+  const result = await db.task.findByIdAndUpdate(
+    _id,
+    { status: "Completed", completedAt: new Date() },
+    { new: true }
+  );
+  if (!result) throw new BadRequestError("Failed to complete task");
+  return handleSuccess("Task completed successfully");
+};
