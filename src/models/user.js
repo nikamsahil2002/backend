@@ -10,17 +10,16 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        mobile: {
-            type: String,
-            unique: true,
-            required: true
-        },
         email: {
             type: String,
             unique: true,
             required: true
         },
         password: {
+            type: String,
+            required: true
+        },
+        avatar: {
             type: String,
             required: true
         },
@@ -34,10 +33,6 @@ const userSchema = new mongoose.Schema(
             enum: ["Active", "Inactive", "Archive"],
             default: "Active"
         },
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "user"
-        },
         deletedAt: {
             type: Date,
             default: null
@@ -50,10 +45,6 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index(
     { email: 1 },
-    { unique: true, partialFilterExpression: { deletedAt: null } }
-  );
-  userSchema.index(
-    { mobile: 1 },
     { unique: true, partialFilterExpression: { deletedAt: null } }
   );
   

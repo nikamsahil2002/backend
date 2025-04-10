@@ -1,183 +1,157 @@
 const db = require('../models');
-const bcrypt = require('bcrypt');
 const moment = require("moment");
-const { Op } = require("sequelize");
-
-const { generateToken } = require('../utils/jwt')
-const { UnauthorizedError, BadRequestError, ValidationError } = require('../utils/customError');
-// const { sendEmail } = require('../utils/sendMail');
+const client = require('../../config/redis');
+const sendEmail = require('../../utiles/email')
+const { generateToken } = require('../../utiles/jwt')
+const { UnauthorizedError, BadRequestError, ValidationError, DataNotFoundError } = require('../../utiles/customError');
 
 exports.logInService = async (body) => {
-    const mobile = body.mobile;
-    const getUserInfo = await db.user.findOne({ 
-            where: { 
-                mobile,
-                deleted_at : null
-            },
-            include: [
-                {
-                    model: db.role,
-                    attributes: ['name']
-                },
-                {
-                    model: db.hotel,
-                    attributes: ['name', 'address', 'baseTokenPoints']
-                }
-            ]
-        });
+    const { email, password } = body;
 
-    if (!getUserInfo) {
-        throw new ValidationError(`User with Mobile Number ${body.mobile} Not Found.`);
+    if (!email || !password) {
+        throw new BadRequestError('Please enter email and password');
     }
-    
-    const comparePassword = await bcrypt.compare(body.password, getUserInfo.password);
-    if (!comparePassword) {
-        throw new UnauthorizedError("Invalid Mobile Number or Password.");
+
+    const userExists = await retriveUserInfo(email); 
+
+    if (!userExists) {
+        throw new DataNotFoundError('Email not found');
     }
-    const data = {
-        id: getUserInfo.id,
-        mobile: mobile,
-        role : getUserInfo.role?.name,
-        hotel: getUserInfo.hotel?.name
+
+    const isMatch = await userExists.comparePassword(password);
+
+    if (!isMatch) {
+        throw new ValidationError('Invalid Email or Password');
     }
-    const accessToken = generateToken(data);
-    const ifTokenExist = await db.user_token.findOne({ where: { user_id: getUserInfo.id }});
-    if(ifTokenExist){
-        await db.user_token.update(
-            { token: accessToken },
-            { where: { 
-                user_id: getUserInfo.id 
-            }
+
+    const token = generateToken(userExists);
+
+    const userToken = await db.user_token.findOne({ userId: userExists._id });
+
+    if (userToken) {
+        await db.user_token.updateOne(
+            { userId: userExists._id },
+            { token: token }
+        );
+    }     
+    else {
+        await db.UserToken.create({
+            userId: userExists._id,
+            token: token
         });
     }
-    else{
-        await db.user_token.create({ 
-            userId: getUserInfo.id, 
-            token: accessToken 
-        });
-    }
+
     return {
-        status : 200,
-        message : "Logged In successfully",
-        role : getUserInfo.role?.name,
-        hotel: getUserInfo.hotel,
-        token : accessToken
-    }
+        error: false,
+        message: 'Logged In Successfully',
+        data: token
+    };
 }
 
-exports.logoutService = async (mobile, accesstoken) => {
-    if(!mobile || !accesstoken){
-        throw new ValidationError();
+exports.logoutService = async (body) => {
+    const { id, token } = body;
+
+    const deleteUser = await db.user_token.deleteOne({ userId: id });
+
+    await client.del(token);
+
+    if (!deleteUser.deletedCount) {
+        return {
+            error: false,
+            message: 'User Already Logged Out'
+        };
     }
-    const userInfo = await db.user.findOne({
+
+    return {
+        error: false,
+        message: 'User Logged Out Successfully'
+    };
+}
+
+
+exports.forgotPasswordService = async (forgotPasswordData) => {
+    const { email } = forgotPasswordData;
+    const userInfo = await retriveUserInfo(email); 
+    
+    const otp = Math.floor(1000 + Math.random() * 9000);
+
+    const templateForMail = await db.email_template.findOne({
         where: {
-            mobile,
-            deleted_at : null
+            event: "verify-otp"
         }
     });
-    if(!userInfo){
-        throw new ValidationError(`User with Mobile Number ${mobile} does not exist`);
+    if(!templateForMail){
+        throw new BadRequestError("Error While sending mail");
     }
-    await db.user_token.update(
-        { deletedAt: Date.now() },
-        {
-            where: {
-                userId : userInfo.id,
-                token : accesstoken
-            }
+    templateForMail.interpolateContent(userInfo.name, otp);
+
+    const insertOtp = await db.userOtp.create({
+            userId: userInfo.id,
+            otp
         }
     );
-    return {
-        status: 200,
-        message : "User Logged Out Successfully."
+    if (!insertOtp) {
+        throw new BadRequestError("error while sending otp");
     }
-}
 
+    await sendEmail(
+        userInfo.email,
+        templateForMail.subject,
+        templateForMail.body
+    );
 
-// exports.forgotPasswordService = async (forgotPasswordData) => {
-//     const { email } = forgotPasswordData;
-//     const userInfo = await retriveUserInfo(email); 
-    
-//     const otp = Math.floor(1000 + Math.random() * 9000);
-
-//     const templateForMail = await db.emailTemplate.findOne({
-//         where: {
-//             event: "verify-otp"
-//         },
-//         individualHooks: true
-//     });
-//     if(!templateForMail){
-//         throw new BadRequestError("Error While sending mail");
-//     }
-//     templateForMail.interpolateContent(userInfo.name, otp);
-
-//     const insertOtp = await db.userOtp.create({
-//             userId: userInfo.id,
-//             otp
-//         }
-//     );
-//     if (!insertOtp) {
-//         throw new BadRequestError("error while sending otp");
-//     }
-
-//     await sendEmail(
-//         userInfo.email,
-//         templateForMail.subjectLine,
-//         templateForMail.content
-//     );
-
-//     return { 
-//         status : 200, 
-//         message: "Otp sent successfully" 
-//     };
-// };
+    return { 
+        status : 200, 
+        message: "Otp sent successfully" 
+    };
+};
 
   
-// exports.verifyOtpService = async (verifyOtpData) => {
-//     const { email, otp } = verifyOtpData;
-//     const userInfo = await retriveUserInfo(email);
+exports.verifyOtpService = async (verifyOtpData) => {
+    const { email, otp } = verifyOtpData;
+    const userInfo = await retriveUserInfo(email);
 
-//     const verifyOtp = await db.userOtp.findOne({
-//       where: { 
-//             userId: userInfo.id, 
-//             otp, 
-//             expiryTime: { 
-//                 [Op.gte]: moment().format("YYYY-MM-DD HH:mm:ss")
-//             } 
-//         },
-//         order: [["createdAt", "DESC"]],
-//     });
-//     if(!verifyOtp) {
-//         throw new ValidationError("OTP is invalid or expired!");
-//     } 
-//     else if(verifyOtp.isVerified) { // check if the otp is already verified.
-//       throw new ValidationError("OTP is already verified!")
-//     }
-//     const modifyOtpStatus = await db.userOtp.update(
-//       { isVerified: true },
-//       {
-//         where: {
-//           id: verifyOtp.id,
-//         },
-//       }
-//     );
-//     if(!modifyOtpStatus[0]) {
-//         throw new BadRequestError('Error while verifying OTP!');
-//     }
-//     return { 
-//         status : 200, 
-//         message: "Otp verified successfully"
-//     };
-// };
+    const verifyOtp = await db.userOtp.findOne({
+      where: { 
+            userId: userInfo.id, 
+            otp, 
+            expiryTime: { 
+                [Op.gte]: moment().format("YYYY-MM-DD HH:mm:ss")
+            } 
+        },
+        order: [["createdAt", "DESC"]],
+    });
+    if(!verifyOtp) {
+        throw new ValidationError("OTP is invalid or expired!");
+    } 
+    else if(verifyOtp.isVerified) { // check if the otp is already verified.
+      throw new ValidationError("OTP is already verified!")
+    }
+    const modifyOtpStatus = await db.userOtp.update(
+      { isVerified: true },
+      {
+        where: {
+          id: verifyOtp.id,
+        },
+      }
+    );
+    if(!modifyOtpStatus[0]) {
+        throw new BadRequestError('Error while verifying OTP!');
+    }
+    return { 
+        status : 200, 
+        message: "Otp verified successfully"
+    };
+};
 
-async function retriveUserInfo(mobile){
+async function retriveUserInfo(email){
     const userExist = await db.user.findOne({ 
         where: { 
-            mobile: mobile
+            email
         } 
     });
     if (!userExist) {
-        throw new ValidationError(`User with Mobile Number ${mobile} not found`);
+        throw new ValidationError(`User with Email ${email} not found`);
     }
     return userExist;
 }

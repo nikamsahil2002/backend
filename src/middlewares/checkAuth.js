@@ -1,71 +1,66 @@
 const jwt = require('jsonwebtoken');
-
-const db = require('../models/index')
+const db = require('../models/index');
 const client = require('../config/redis');
-const response = require('../utils/response');
+const response = require('../../utiles/response');
 
-
-
-module.exports = async (req, res, next)=> {
+exports.checkAuth = async (req, res, next) => {
     try {
         let token = req.headers.authorization;
-        if(!token){
-            return response.unauthorized(res);
-        }
-        token = token.split(' ')[1];
-        //if token is present in the database now decode the token
-        const decoded = jwt.verify(token, process.env.PRIVATE_KEY);
-        if(!decoded.userid){
+          
+        if (!token) {
             return response.unauthorized(res);
         }
 
-        // first check if the token is present in redis cache
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (!decoded.id) {
+            return response.unauthorized(res);
+        }
+
         const redisToken = await client.get(token);
-        const decode = jwt.verify(token, process.env.PRIVATE_KEY);
-
         if (redisToken) {
-            console.log("JWT Token found in Redis");
-            if (decode) { 
-                let userData = await db.user.findOne({
-                    _id : decoded.userid
-                });
-                userData = userData[0];
-                if(!userData){
-                    return response.noData(res);
-                };
-                req.userData = {id : userData.id, email : userData.email, roleId : userData.roleId };
-                return next();
-            } 
-            else {
-              console.log("Invalid token in Redis");
-              return response.unauthorized(res);
+            const userData = await db.User
+            .findById(decoded.id)
+            .populate("roleId","roleName")
+            .select('id email roleId');
+
+            if (!userData) {
+                return response.unauthorized(res);
             }
+            req.userData = {
+                id: userData._id,
+                email: userData.email,
+                roleId: userData.roleId,
+                roleName: userData.roleId?.roleName
+
+            };
+            return next();
         }
 
-        // set the token into the redis
-        await client.setEx(token, 3600, JSON.stringify(decode));
-        console.log("setted redis token");
+        await client.setEx(token, 3600, JSON.stringify(decoded));
 
-        // check if the userid and token is present in the database or not.\
-        const check = await db.userToken.findOne({
-            userId: decoded.userid,
-            token: token
-        });
+        const check = await db.UserToken.findOne({ userId: decoded.id, token });
         if (!check) {
             return response.unauthorized(res);
         }
-        // find the userdata and add that into request object for further use
-        const userData =await db.user.findOne(
-            { _id : decoded.userid },
-            )
+
+        const userData = await db.User
+            .findById(decoded.id)
+            .populate("roleId , roleName")
             .select('id email roleId');
-        if(!userData){
-            return response.noData(res);
+        if (!userData) {
+            return response.unauthorized(res);
+        }
+
+
+        req.userData = {
+            id: userData._id,
+            email: userData.email,
+            roleId: userData.roleId,
+            roleName: userData.roleId?.roleName
         };
-        req.userData = {id : userData._id, email : userData.email, roleId : userData.roleId };
         next();
-    }
-    catch(err){
+    } catch (err) {
         next(err);
     }
-}
+};
