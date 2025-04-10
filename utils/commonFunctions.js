@@ -1,6 +1,6 @@
 
 
-const findAll = async (collection, searchQuery, sortOrder, skip, limit, projectFields, lookupFields) => {
+const findAll = async (collection, searchQuery, sortObject, skip, limit, projectFields, lookupFields) => {
 
     const result = await collection.aggregate([
         ...lookupFields,
@@ -9,7 +9,7 @@ const findAll = async (collection, searchQuery, sortOrder, skip, limit, projectF
           $facet: {
             totalResponses: [{ $count: "count" }],
             result: [
-              { $sort: { updatedAt : sortOrder }},
+              { $sort: sortObject},
               { $skip: skip },
               { $limit: limit },
               {

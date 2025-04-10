@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const taskSchema = new Schema(
+const projectSchema = new Schema(
   {
     title: {
       type: String,
@@ -10,6 +10,10 @@ const taskSchema = new Schema(
     description: {
       type: String,
       required: true,
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "category",
     },
     project: {
       type: Schema.Types.ObjectId,
@@ -51,5 +55,4 @@ const taskSchema = new Schema(
   }
 );
 
-const task = mongoose.model("task", taskSchema);
-module.exports = task;
+module.exports = mongoose.model("project", projectSchema);

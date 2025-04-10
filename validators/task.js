@@ -2,12 +2,12 @@ const { body } = require("express-validator");
 
 const createTaskValidator = [
   body("title")
-  .notEmpty()
-  .withMessage("Title is required"),
+    .notEmpty()
+    .withMessage("Title is required"),
   body("description")
-  .optional()
-  .isString()
-  .withMessage("Description must be string"),
+    .optional()
+    .isString()
+    .withMessage("Description must be string"),
   body("category")
     .optional()
     .isMongoId()
@@ -47,9 +47,9 @@ const createTaskValidator = [
 
 const updateTaskValidator = [
   body("title")
-  .optional()
-  .notEmpty()
-  .withMessage("Title cannot be empty"),
+    .optional()
+    .notEmpty()
+    .withMessage("Title cannot be empty"),
   body("description")
     .optional()
     .notEmpty()

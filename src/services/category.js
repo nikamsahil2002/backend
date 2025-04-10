@@ -17,6 +17,7 @@ exports.getAllCategories = async (query) => {
   const skip = (pageNumber - 1) * limit;
   const search = query.search || "";
   const sortOrder = parseInt(query.sortOrder) || -1;
+  const sortField = query.sortField || "updatedAt";
 
   const searchQuery = {
     $or: [
@@ -29,7 +30,11 @@ exports.getAllCategories = async (query) => {
     description: 1,
     createdAt: 1
   }
-  const categoryData = await commonFunction.findAll(db.category, searchQuery, sortOrder, skip, limit, projectFields, []);
+
+  const sortObject = {};
+  sortObject[sortField] =  sortOrder;
+
+  const categoryData = await commonFunction.findAll(db.category, sortObject, skip, limit, projectFields, []);
 
   const totalResponses = categoryData[0]?.totalResponses || 0;
   const result = categoryData[0]?.result || [];

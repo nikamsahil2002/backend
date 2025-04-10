@@ -38,6 +38,7 @@ exports.fetchUserDetails = async (query) => {
   const skip = (pageNumber - 1) * limit;
   const search = query.search || "";
   const sortOrder = parseInt(query.sortOrder) || -1;
+  const sortField = query.sortField || "updatedAt";
 
   const searchQuery = {
     $and: [
@@ -72,7 +73,10 @@ exports.fetchUserDetails = async (query) => {
     "role.roleName": 1
   }
 
-  const userFound = await commonFunction.findAll(db.user, searchQuery, sortOrder, skip, limit, projectFields, lookupFields)
+  const sortObject = {};
+  sortObject[sortField] =  sortOrder;
+
+  const userFound = await commonFunction.findAll(db.user, searchQuery, sortObject, skip, limit, projectFields, lookupFields)
 
   const totalResponses = userFound[0]?.totalResponses || 0;
   const result = userFound[0]?.result || [];
