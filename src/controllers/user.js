@@ -20,7 +20,7 @@ exports.retrieveUserById = async (req, res) => {
 
 exports.modifyUser = async (req, res) => {
     const { id } = req.params;
-    const result = await updateUserById(id, req.body, req.user.id);
+    const result = await updateUserById(id, req.body);
     return response.ok(res, result);
 };
 

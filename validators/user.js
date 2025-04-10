@@ -83,8 +83,6 @@ exports.validateUpdateUser = [
     .optional()
     .isMongoId()
     .withMessage("roleId should be mongoId"),
-
-
 ];
 
 exports.validateUpdatePassword = [
@@ -93,6 +91,14 @@ exports.validateUpdatePassword = [
     .withMessage("Email is required")
     .isEmail()
     .withMessage("Please enter a valid email"),
+
+  body("otp")
+    .notEmpty()
+    .withMessage("otp is required")
+    .isString()
+    .withMessage("otp must be a string")
+    .isLength({ min: 4, max: 4 })
+    .withMessage("Please enter a valid OTP"),
 
   body("newPassword")
     .notEmpty()
@@ -104,12 +110,18 @@ exports.validateUpdatePassword = [
     ),
 ];
 
-exports.validateResetPassword = [
-  body("newPassword")
+exports.validateVerifyOtp = [
+  body("email")
     .notEmpty()
-    .withMessage("Password is required ")
-    .matches(passwordRegx)
-    .withMessage(
-      "Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a digit, and a special character"
-    ),
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email"),
+
+  body("otp")
+    .notEmpty()
+    .withMessage("otp is required")
+    .isString()
+    .withMessage("otp must be a string")
+    .isLength({ min: 4, max: 4 })
+    .withMessage("Please enter a valid OTP"),
 ];

@@ -10,7 +10,7 @@ const checkPermission  = require("../middleWares/checkPermission");
 router.post("/",/* checkAuth, checkPermission,*/ validateAddUser, validationError, errorWrapper(insertUser));
 router.get("/",/* checkAuth, checkPermission, */errorWrapper(retrieveUser));
 router.get("/:id",/* checkAuth, checkPermission,*/ errorWrapper(retrieveUserById));
-router.put("/:id", checkAuth, checkPermission, validateUpdateUser, validationError,  errorWrapper(modifyUser));
-router.delete("/:id", checkAuth, checkPermission, errorWrapper(removeUser));
+router.put("/:id",/* checkAuth, checkPermission,*/ validateUpdateUser, validationError,  errorWrapper(modifyUser));
+router.delete("/:id",/* checkAuth, checkPermission,*/ errorWrapper(removeUser));
 
 module.exports = router;

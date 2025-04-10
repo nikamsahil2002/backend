@@ -9,16 +9,15 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = async (req, res) => {
-    const { mobile } = req.body;
+    const { userId } = req.body;
     const accesstoken = req.headers.authorization.split(' ')[1];
-    const result = await logoutService(mobile, accesstoken);
+    const result = await logoutService(userId, accesstoken);
     return response.ok(res,result);
 }
 
 exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
-    const forgotPasswordData = { email };
-    const result = await forgotPasswordService(forgotPasswordData);
+    const result = await forgotPasswordService(email);
     return response.ok(res,result);
 };
   
