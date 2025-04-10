@@ -1,5 +1,5 @@
 const { createUser, fetchUserDetails, fetchUserById, updateUserById, deleteUserById } = require("../services/user");
-  const response = require("../../utiles/response");
+  const response = require("../../utils/response");
   
 exports.insertUser = async (req, res) => {
     console.log(req.body)

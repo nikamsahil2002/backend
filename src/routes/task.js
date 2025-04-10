@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const checkAuth = require("../middleWare/checkAuth");
-const { checkPermission } = require('../middleWare/checkPermission');
+const checkAuth = require("../middlewares/checkAuth");
+const checkPermission = require('../middlewares/checkPermission');
 const { errorWrapper } = require("../../utils/errorWrapper");
 const { insertTask, fetchTaskById, fetchTasks, modifyTask, removeTask } = require("../controllers/task");
 const { createTaskValidator, updateTaskValidator } = require("../../validators/task");

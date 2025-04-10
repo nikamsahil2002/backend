@@ -33,6 +33,11 @@ const taskSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: "user"
     },
+    recurrence: {
+        type: String,
+        enum: ["once", "daily", "weekly", "monthly"],
+        default: "once"
+    },
     status: {
       type: String,
       enum: ["Not started", "In progress", "done"],

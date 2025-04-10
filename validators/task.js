@@ -6,7 +6,8 @@ const createTaskValidator = [
   .withMessage("Title is required"),
   body("description")
   .optional()
-  .withMessage("Description is required"),
+  .isString()
+  .withMessage("Description must be string"),
   body("category")
     .optional()
     .isMongoId()

@@ -1,12 +1,7 @@
 const jwt = require('jsonwebtoken');
 const db = require('../models/index');
-<<<<<<< Updated upstream
 const client = require('../../config/redis');
-const response = require('../../utiles/response');
-=======
-const client = require('../config/redis');
 const response = require('../../utils/response');
->>>>>>> Stashed changes
 
 module.exports = async (req, res, next) => {
     try {

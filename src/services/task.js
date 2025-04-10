@@ -1,13 +1,10 @@
 const db = require("../models/index");
-const handleSuccess = require("../../utils/");
+const handleSuccess = require("../../utils/successHandler");
 const { ObjectId } = require('mongoose').Types;
 const {
   DataNotFoundError,
   BadRequestError,
 } = require("../../utils/customError");
-const { isValidObjectId } = require("mongoose");
-
-const { ObjectId } = require("mongoose").Types;
 
 exports.createTask = async (body) => {
   const {
@@ -18,10 +15,12 @@ exports.createTask = async (body) => {
     project,
     dueDate,
     assignedTo,
+    recurrence,
     media,
     priority,
     estimatedTime,
   } = body;
+
   const task = await db.task.create({
     title,
     description,
@@ -29,6 +28,7 @@ exports.createTask = async (body) => {
     category,
     project,
     dueDate,
+    recurrence,
     media,
     assignedTo,
     priority,
