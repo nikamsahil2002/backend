@@ -14,41 +14,38 @@ const projectSchema = new Schema(
     category: {
       type: Schema.Types.ObjectId,
       ref: "category",
-    },
-    project: {
-      type: Schema.Types.ObjectId,
-      ref: "project",
-    },
-    media: {
-      type: String,
-    },
-    priority: {
-        type: String,
-        enum: ["High", "Medium", "Low"]
-    },
-    estimatedTime: {
-        type: Number  // in hours
+      required: true
     },
     assignedTo: {
-        type: Schema.Types.ObjectId,
-        ref: "user"
-    },
-    recurrence: {
-        type: String,
-        enum: ["once", "daily", "weekly", "monthly"],
-        default: "once"
+      type: Schema.Types.ObjectId,
+      ref: "team",
+      required: true
     },
     status: {
       type: String,
-      enum: ["Not started", "In progress", "done"],
-      default: "not started",
+      enum: ["Not Started", "In Progress", "Completed"],
+      default: "Not Started",
     },
-    completedAt: {
-        type: Date
+    estimatedTime: {
+      type: Number,  // in hours
+      required: true
+    },
+    startDate: {
+      type: Date,
+      required: false
     },
     dueDate: {
       type: Date,
+      required: true
     },
+    completedAt: {
+        type: Date,
+        default: null
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+  },
   },
   {
     timestamps: true,

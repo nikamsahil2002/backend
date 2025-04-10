@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const taskSchema = new Schema(
+const taskRecurrenceSchema = new Schema(
   {
     title: {
       type: String,
@@ -11,12 +11,16 @@ const taskSchema = new Schema(
       type: String,
       required: true,
     },
+    media: {
+      type: String,
+    },
     projectId: {
       type: Schema.Types.ObjectId,
       ref: "project",
     },
-    media: {
-      type: String,
+    taskId: {
+      type: Schema.Types.ObjectId,
+      ref: "task"
     },
     priority: {
         type: String,
@@ -28,14 +32,29 @@ const taskSchema = new Schema(
         ref: "user",
         required: true
     }],
-    recurrence: {
-        type: String,
-        enum: ["once", "daily", "weekly", "monthly"],
-        default: "once"
+    status: {
+      type: String,
+      enum: ["Not Started", "In Progress", "Completed"],
+      default: "Not Started",
     },
+    comments: [{
+      text: {
+        type: String,
+        required: true
+      },
+      createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
+    }],
     estimatedTime: {
       type: Number,  // in hours
-      required: false
+      required: true
     },
     startDate: {
       type: Date,
@@ -43,16 +62,17 @@ const taskSchema = new Schema(
     },
     dueDate: {
       type: Date,
-      required: false
+      required: true
     },
-    deletedAt: {
+    completedAt: {
       type: Date,
-      default: null,
-  },
+      default: null
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("task", taskSchema);
+const task = mongoose.model("task_recurrence", taskRecurrenceSchema);
+module.exports = task;
