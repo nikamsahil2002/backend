@@ -3,6 +3,7 @@ const { ValidationError, DataNotFoundError, BadRequestError, ForbiddenRequestErr
 const { ObjectId } = require("mongoose").Types;
 const handleSuccess = require('../../utils/successHandler');
 const { default: mongoose } = require("mongoose");
+const commonFunction = require('../../utils/commonFunctions');
 
 exports.createUser = async (userData) => {
   const { firstName, lastName, email, password, avatar, roleId } = userData;
@@ -51,7 +52,7 @@ exports.fetchUserDetails = async (query) => {
     ]
   }
 
-  const userFound = await db.user.aggregate([
+  const lookupFields = [
     {
       $lookup : {
         from : 'roles',
@@ -61,33 +62,17 @@ exports.fetchUserDetails = async (query) => {
       }
     },
     { $unwind : "$role" },
-    { $match: { deletedAt: null, ...searchQuery } },
-    {
-      $facet: {
-        totalResponses: [{ $count: "count" }],
-        result: [
-          { $sort: { updatedAt : sortOrder }},
-          { $skip: skip },
-          { $limit: limit },
-          {
-            $project: {
-              firstName: 1,
-              lastName: 1,
-              email: 1,
-              createdAt: 1,
-              "role.roleName": 1
-            }
-          }
-        ]
-      }
-    },
-    {
-      $project: {
-        totalResponses: { $arrayElemAt: ["$totalResponses.count", 0] },
-        result: 1
-      }
-    }
-  ]);
+  ];
+
+  const projectFields = {
+    firstName: 1,
+    lastName: 1,
+    email: 1,
+    createdAt: 1,
+    "role.roleName": 1
+  }
+
+  const userFound = await commonFunction.findAll(db.user, searchQuery, sortOrder, skip, limit, projectFields, lookupFields)
 
   const totalResponses = userFound[0]?.totalResponses || 0;
   const result = userFound[0]?.result || [];

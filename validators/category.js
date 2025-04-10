@@ -1,6 +1,6 @@
 const { body, param } = require("express-validator");
 
-const createCategoryValidator = [
+exports.createCategoryValidator = [
   body("name")
     .notEmpty()
     .withMessage("Name is required")
@@ -13,7 +13,7 @@ const createCategoryValidator = [
     .withMessage("Description must be a string"),
 ];
 
-const updateCategoryValidator = [
+exports.updateCategoryValidator = [
   param("id")
     .isMongoId()
     .withMessage("Invalid category ID format"),
@@ -28,8 +28,3 @@ const updateCategoryValidator = [
     .isString()
     .withMessage("Description must be a string"),
 ];
-
-module.exports = {
-  createCategoryValidator,
-  updateCategoryValidator,
-};

@@ -7,7 +7,7 @@ exports.insertCategory = async (req, res) => {
 };
 
 exports.fetchAllCategories = async (req, res) => {
-  const result = await getAllCategories();
+  const result = await getAllCategories(req.query);
   return response.ok(res, result);
 };
 
