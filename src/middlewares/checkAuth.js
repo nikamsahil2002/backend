@@ -19,10 +19,10 @@ module.exports = async (req, res, next) => {
 
         const redisToken = await client.get(token);
         if (redisToken) {
-            const userData = await db.User
-            .findById(decoded.id)
-            .populate("roleId","roleName")
-            .select('id email roleId');
+            const userData = await db.user
+                .findById(decoded.id)
+                .populate("roleId","roleName")
+                .select('id email roleId');
 
             if (!userData) {
                 return response.unauthorized(res);
@@ -32,7 +32,6 @@ module.exports = async (req, res, next) => {
                 email: userData.email,
                 roleId: userData.roleId,
                 roleName: userData.roleId?.roleName
-
             };
             return next();
         }
@@ -44,14 +43,13 @@ module.exports = async (req, res, next) => {
             return response.unauthorized(res);
         }
 
-        const userData = await db.User
+        const userData = await db.user
             .findById(decoded.id)
             .populate("roleId , roleName")
             .select('id email roleId');
         if (!userData) {
             return response.unauthorized(res);
         }
-
 
         req.userData = {
             id: userData._id,
@@ -60,7 +58,8 @@ module.exports = async (req, res, next) => {
             roleName: userData.roleId?.roleName
         };
         next();
-    } catch (err) {
+    } 
+    catch (err) {
         next(err);
     }
 };

@@ -14,8 +14,14 @@ const rolePermissionSchema = new mongoose.Schema({
         default: null
     }
 },
-{
-    timestamps:true
-}
-)
+    {
+        timestamps: true
+    }
+);
+
+rolePermissionSchema.pre(/^find|^count/i, function (next) {
+    this.where({ deletedAt: null });
+    next();
+});
+
 module.exports = mongoose.model("role_permission", rolePermissionSchema)

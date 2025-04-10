@@ -31,4 +31,9 @@ const permissionSchema = new mongoose.Schema({
     }
 )
 
+permissionSchema.pre(/^find|^count/i, function (next) {
+    this.where({ deletedAt: null });
+    next();
+});
+
 module.exports = mongoose.model('permission', permissionSchema)

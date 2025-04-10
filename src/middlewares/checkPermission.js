@@ -1,31 +1,33 @@
 const db = require("../models/index");
 
 module.exports = async (req, res, next) => {
-  let match = false;
-  const roleId = req.userData.roleId;
+  try {
+    const roleId = req.userData.roleId;
 
-  const checkRole = await db.Role
-    .findOne({ _id: roleId })
-    .populate("permissions");
+    // check in permission collection
+    const permission = await db.permission.find({
+      baseUrl : req.baseUrl,
+      path : req.route.path,
+      method : req.method
+    });
 
-
-  if (!checkRole) {
-      return res.status(401).send({ message: "Role Not Found " });
-  }
-
-  checkRole.permissions.forEach((e) => {
-    if (
-      e.method === req.method &&
-      e.path === req.route.path &&
-      e.baseUrl === req.baseUrl
-    ) {
-      match = true;
+    if(!permission[0]){
+      return res.status(401).json({ message: "Permission Not Found "});
     }
-  });
-  if (!match) {
-    return res.status(403).json({ error: true, message: "You don't have permission for this!" });
-  }
-  next();
 
+    // check in role permission colletion
+    const rolePermission = await db.role_permission.find({
+      roleId,
+      permissionId: permission[0]._id
+    });
+
+    if(!rolePermission[0]){
+      return res.status(401).json({ message: "You Don't Have Permission To This."});
+    }
+    next();
+  }
+  catch(err) {
+    next(err)
+  }
 };
 

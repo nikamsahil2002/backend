@@ -1,10 +1,10 @@
 const db = require('../models');
 const moment = require("moment");
 const client = require('../../config/redis');
-const sendEmail = require('../../utiles/email')
-const { generateToken } = require('../../utiles/jwt')
-const { BadRequestError, ValidationError, DataNotFoundError } = require('../../utiles/customError');
-const handleSuccess = require('../../utiles/successHandler');
+const sendEmail = require('../../utils/email')
+const { generateToken } = require('../../utils/jwt')
+const { BadRequestError, ValidationError, DataNotFoundError } = require('../../utils/customError');
+const handleSuccess = require('../../utils/successHandler');
 
 exports.logInService = async (body) => {
     const { email, password } = body;
