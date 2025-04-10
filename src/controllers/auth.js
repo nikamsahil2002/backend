@@ -1,5 +1,5 @@
 const { logInService, logoutService, forgotPasswordService, verifyOtpService, resetPasswordService } = require('../services/auth');
-const response = require('../../utiles/response');
+const response = require('../../utils/response');
 
 
 exports.login = async (req, res) => {
