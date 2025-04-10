@@ -25,15 +25,6 @@ exports.validateAddUser = [
     .isEmail()
     .withMessage("Please enter a valid email"),
 
-  body("mobile")
-    .notEmpty()
-    .withMessage("Mobile Number is required")
-    .bail()
-    .isString()
-    .withMessage("Mobile number must be a string")
-    .isLength({ min: 10, max: 10 })
-    .withMessage("Mobile number must be exactly 10 digits"),
-
   body("password")
     .notEmpty()
     .withMessage("Password is required")
@@ -42,6 +33,12 @@ exports.validateAddUser = [
     .withMessage(
       "Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a digit, and a special character"
     ),
+
+  body("avatar")
+    .notEmpty()
+    .withMessage("Avatar is required")
+    .isString()
+    .withMessage("Avatar should be a string"),
 
   body("roleId")
     .notEmpty()
@@ -72,14 +69,22 @@ exports.validateUpdateUser = [
     .isLength({ min: 3, max: 50 })
     .withMessage("Last Name should be 3 to 50 characters long"),
 
-  body("email").optional().isEmail().withMessage("Please enter a valid email"),
+  body("email")
+    .optional()
+    .isEmail()
+    .withMessage("Please enter a valid email"),
 
-  body("mobile")
+  body("avatar")
     .optional()
     .isString()
-    .withMessage("Mobile number must be a string")
-    .isLength({ min: 10, max: 10 })
-    .withMessage("Mobile number must be exactly 10 digits"),
+    .withMessage("Avatar should be a string"),
+
+  body("roleId")
+    .optional()
+    .isMongoId()
+    .withMessage("roleId should be mongoId"),
+
+
 ];
 
 exports.validateUpdatePassword = [

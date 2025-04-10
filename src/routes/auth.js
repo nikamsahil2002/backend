@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const {errorWrapper} = require('../../utiles/errorWrapper');
+const { errorWrapper } = require('../../utiles/errorWrapper');
 const { validateUpdatePassword } = require('../../validators/user');
 const { validationError } = require('../../utiles/validationError');
 const { login, logout, forgotPassword, verifyOtp, resetPassword } = require('../controllers/auth');

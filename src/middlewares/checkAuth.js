@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const db = require('../models/index');
-const client = require('../config/redis');
+const client = require('../../config/redis');
 const response = require('../../utiles/response');
 
-exports.checkAuth = async (req, res, next) => {
+module.exports = async (req, res, next) => {
     try {
         let token = req.headers.authorization;
           

@@ -161,9 +161,9 @@ exports.resetPasswordService = async (resetPasswordData) => {
     const { mobile, newPassword, otp } = resetPasswordData;
     const userInfo = await retriveUserInfo(mobile);
 
-    const verifyOtp = await db.userOtp.findOne({
+    const verifyOtp = await db.user_otp.findOne({
         where: { 
-            user_id: userInfo.id, 
+            userId: userInfo.id, 
             otp, 
             isVerified: true 
         },

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
     {
@@ -12,7 +13,6 @@ const userSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            unique: true,
             required: true
         },
         password: {
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
         },
         roleId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "role",
+            ref: 'role',
             required: true
         },
         status: {
@@ -44,44 +44,44 @@ const userSchema = new mongoose.Schema(
 )
 
 userSchema.index(
-    { email: 1 },
-    { unique: true, partialFilterExpression: { deletedAt: null } }
-  );
-  
-  userSchema.pre("save", async function (next) {
-    const user = this;
-    if (!user.isModified("password")) return next();
-  
+  { email: 1 },
+  { unique: true, partialFilterExpression: { deletedAt: null } }
+);
+
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (!user.isModified("password")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  const user = this;
+  if (user._update.password) {
     try {
       const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(user.password, salt);
-      next();
+      user._update.password = await bcrypt.hash(user._update.password, salt);
     } catch (error) {
-      next(error);
+      return next(error);
     }
-  });
-  
-  userSchema.pre("findOneAndUpdate", async function (next) {
-    const user = this;
-    if (user._update.password) {
-      try {
-        const salt = await bcrypt.genSalt(10);
-        user._update.password = await bcrypt.hash(user._update.password, salt);
-      } catch (error) {
-        return next(error);
-      }
-    }
-    next();
-  });
-  
-  userSchema.pre(/^find|^count/i, function (next) {
-    this.where({ deletedAt: null });
-    next();
-  });
-  
-  userSchema.methods.comparePassword = async function (candidatePassword) {
-    return bcrypt.compare(candidatePassword, this.password);
-  };
+  }
+  next();
+});
+
+userSchema.pre(/^find|^count/i, function (next) {
+  this.where({ deletedAt: null });
+  next();
+});
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
 
 module.exports = mongoose.model("user", userSchema)
