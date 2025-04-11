@@ -1,7 +1,6 @@
 
 
 const findAll = async (collection, searchQuery, sortObject, skip, limit, projectFields, lookupFields) => {
-
     const result = await collection.aggregate([
         ...lookupFields,
         { $match: { deletedAt: null, ...searchQuery } },
@@ -28,6 +27,12 @@ const findAll = async (collection, searchQuery, sortObject, skip, limit, project
     return result;
 }
 
+const checkIfRecordExist = async(collection, id) => {
+  const result = await collection.findById(id);
+  return result ? true : false;
+}
+
 module.exports = {
-    findAll
+    findAll,
+    checkIfRecordExist
 }

@@ -80,10 +80,6 @@ exports.fetchUserDetails = async (query) => {
 
   const totalResponses = userFound[0]?.totalResponses || 0;
   const result = userFound[0]?.result || [];
-
-  if (result.length == 0) {
-    throw new DataNotFoundError(`Data not found`);
-  }
   
   const data = {
     pageNumber,

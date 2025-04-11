@@ -78,9 +78,6 @@ exports.getAllTeam = async (query) => {
   const totalResponses = teamsData[0]?.totalResponses || 0;
   const result = teamsData[0]?.result || [];
 
-  if (result.length == 0) {
-    throw new DataNotFoundError("No Team found");
-  }
   const data = {
     pageNumber,
     limit,

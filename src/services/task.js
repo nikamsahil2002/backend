@@ -104,7 +104,6 @@ exports.getAllTasks = async (query) => {
   const totalResponses = tasks[0]?.totalResponses || 0;
   const result = tasks[0]?.result || [];
 
-  if (result.length === 0) throw new DataNotFoundError("No tasks found");
 
   const data = {
     pageNumber,
