@@ -44,11 +44,12 @@ npm install
 
 
 Environment Setup
+DB_DEV_URL=mongodb://localhost:27017/task-manager
+EMAIL_USER=your-email
+EMAIL_PASSWORD=your-gmail-app-password
+REDIS_PORT=localhost
+REDIS_HOST=6379
 PORT=3003
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
 
 Start the Server
 npm start
@@ -59,12 +60,16 @@ backend/
 ├── bin/
 ├── config/
 ├── src/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   └── services/
 ├── utiles/
 ├── utils/
 ├── validators/
 ├── app.js
-├── package.json
 └── README.md
+
 
 📌 API Endpoints
 
@@ -78,6 +83,18 @@ GET /api/projects
 POST /api/projects
 PUT /api/projects/:id
 DELETE /api/projects/:id
+
+Users
+GET /api/users
+POST /api/users
+PUT /api/users/:id
+DELETE /api/users/:id
+
+Teams
+GET /api/teams
+POST /api/teams
+PUT /api/teams/:id
+DELETE /api/teams/:id
 
 Tasks
 GET /api/tasks
@@ -93,3 +110,6 @@ DELETE /api/categories/:id
 
 🧪 Testing
 Use Postman or any REST client to test endpoints. Auth routes require a Bearer token.
+
+Let me know if you want a copy of this file or need it directly pushed to the repo.
+
