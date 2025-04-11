@@ -1,4 +1,4 @@
-# Backend API
+# Task Management
 
 This repository contains the backend implementation for managing users, projects, tasks, and categories.
 
