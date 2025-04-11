@@ -6,33 +6,8 @@ const commonFunction = require('../../utils/commonFunctions');
 const { DataNotFoundError, BadRequestError } = require("../../utils/customError");
 const moment = require('moment');
 
-exports.createTask = async (body) => {
 
-  // check if provided assigend to user id and projectId are valid or not
-  for(let i=0;i<body.assignedTo.length;i++){
-    if(!commonFunction.checkIfRecordExist(db.user, body.assignedTo[0])){
-      throw new BadRequestError(`User With Id ${body.assignedTo[0]} Not Found`)
-    }
-  }
-  
-  if(!commonFunction.checkIfRecordExist(db.project, body.projectId)){
-    throw new BadRequestError(`Project With Id ${body.projectId} Not Found`)
-  }
-
-  const task = await db.task.create(body);
-
-  // if start date is today's date then task recurrence should be created 
-  if(moment(body.startDate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')){
-    body.taskId = task._id;
-    delete recurrence;
-    await db.task_recurrence.create(body);
-  }   
-
-  if (!task) throw new BadRequestError("Failed to create task");
-  return handleSuccess("Task created successfully");
-};
-
-exports.getAllTasks = async (query) => {
+exports.getAllTasksRecurrences = async (query) => {
   const pageNumber = parseInt(query.pageNumber) || 1;
   const limit = parseInt(query.limit) || 10;
   const skip = (pageNumber - 1) * limit;
@@ -72,6 +47,8 @@ exports.getAllTasks = async (query) => {
     "assignedTo.lastName": 1,
     recurrence: 1,
     startDate: 1,
+    status: 1,
+    comments: 1,
     estimatedTime: 1,
     dueDate: 1,
     completedAt: 1,
@@ -101,7 +78,7 @@ exports.getAllTasks = async (query) => {
   const sortObject = {};
   sortObject[sortField] = sortOrder;
 
-  const taskData = await commonFunction.findAll(db.task, searchQuery, sortObject, skip, limit, projectFields, lookupFields)
+  const taskData = await commonFunction.findAll(db.task_recurrence, searchQuery, sortObject, skip, limit, projectFields, lookupFields)
 
   const totalResponses = taskData[0]?.totalResponses || 0;
   const result = taskData[0]?.result || [];
@@ -114,42 +91,45 @@ exports.getAllTasks = async (query) => {
     totalPages: Math.ceil(totalResponses / limit),
     tasks: result,
   };
-  return handleSuccess("Tasks fetched successfully", data);
+  return handleSuccess("Tasks Recurrence fetched successfully", data);
 };
 
-exports.getTaskById = async (_id) => {
-  const result = await db.task
+exports.getTaskRecurrenceById = async (_id) => {
+  const result = await db.task_recurrence
               .findById(_id)
               .populate("assignedTo", "firstName lastName email")
               .populate("projectId", "title description category")
-              .select("title description media projectId priority assignedTo recurrence estimatedTime startDate dueDate completedAt updatedAt")
-  if (!result) throw new DataNotFoundError("Task not found");
-  return handleSuccess("Task fetched successfully", result);
-};
+              .select("title description media projectId taskId priority assignedTo status estimatedTime startDate dueDate completedAt comments updatedAt")
 
-exports.updateTaskById = async (_id, body) => {
-
-  // check if provided assigend to user id and projectId are valid or not
-  for(let i=0;i<body?.assignedTo?.length;i++){
-    if(!commonFunction.checkIfRecordExist(db.user, body.assignedTo[0])){
-      throw new BadRequestError(`User With Id ${body.assignedTo[0]} Not Found`)
-    }
+  if (!result){
+    throw new DataNotFoundError("Task Recurrence not found");
   }
-  if(body.projectId && !commonFunction.checkIfRecordExist(db.project, body.projectId)){
-    throw new BadRequestError(`Project With Id ${body.projectId} Not Found`)
-  }
-  const result = await db.task.findByIdAndUpdate(_id, body, { new: true });
-  if (!result) throw new BadRequestError("Failed to update task");
-  return handleSuccess("Task updated successfully");
+
+  return handleSuccess("Task Recurrence fetched successfully", result);
 };
 
-exports.deleteTaskById = async (_id) => {
-  const result = await db.task.findByIdAndUpdate(
-    _id,
-    { deletedAt: new Date() },
-    { new: true }
-  );
-  if (!result) throw new BadRequestError("Failed to delete task");
-  return handleSuccess("Task deleted successfully");
+exports.addComments = async (_id, body) => {
+  const addComments = await db.task_recurrence.findByIdAndUpdate(_id,
+    { $push: { comments: body } }
+  )
+
+  if (!addComments){
+    throw new DataNotFoundError(`Task with ID ${_id} Not Found`);
+  }
+
+  return handleSuccess("Task Comment Added Successfully");
 };
+
+exports.updateTaskStatus = async (_id, body) => {
+  const addComments = await db.task_recurrence.findByIdAndUpdate(_id,
+    body
+  )
+
+  if (!addComments){
+    throw new DataNotFoundError(`Task with ID ${_id} Not Found`);
+  }
+
+  return handleSuccess("Task Status Updated Successfully");
+};
+
 
