@@ -109,7 +109,9 @@ exports.getAllTasks = async (query) => {
 };
 
 exports.getTaskById = async (_id) => {
-  const result = await db.task.findById(_id);
+  const result = await db.task
+              .findById(_id)
+              ;
   if (!result) throw new DataNotFoundError("Task not found");
   return handleSuccess("Task fetched successfully", result);
 };
