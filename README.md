@@ -72,6 +72,17 @@ backend/
 ├── app.js
 └── README.md
 
+🔧 Steps to Add Postman Collection
+Open Postman, click on your collection.
+
+Click the three dots (⋮) → Export.
+
+Choose format: Collection v2.1 (recommended).
+
+Save it as: postman_collection.json
+
+Move that file to the docs/ folder inside your project.
+
 
 📌 API Endpoints
 
