@@ -7,10 +7,10 @@ const { insertTeam, fetchTeam, fetchTeamById, modifyTeam, removeTeam } = require
 const { createTeamValidator, updateTeamValidator } = require("../../validators/team");
 const { validationError } = require('../../utils/validationError');
 
-router.post('/',/* checkAuth, checkPermission,*/ createTeamValidator, validationError, errorWrapper(insertTeam));
-router.get('/', /*checkAuth, checkPermission,*/ errorWrapper(fetchTeam));
-router.get('/:id',/* checkAuth, checkPermission,*/ errorWrapper(fetchTeamById));
-router.put('/:id',/* checkAuth, checkPermission,*/ updateTeamValidator, validationError, errorWrapper(modifyTeam));
-router.delete('/:id',/* checkAuth, checkPermission,*/ errorWrapper(removeTeam));
+router.post('/',  checkAuth, checkPermission,  createTeamValidator, validationError, errorWrapper(insertTeam));
+router.get('/',  checkAuth, checkPermission,  errorWrapper(fetchTeam));
+router.get('/:id',  checkAuth, checkPermission,  errorWrapper(fetchTeamById));
+router.put('/:id',  checkAuth, checkPermission,  updateTeamValidator, validationError, errorWrapper(modifyTeam));
+router.delete('/:id',  checkAuth, checkPermission,  errorWrapper(removeTeam));
 
 module.exports = router;

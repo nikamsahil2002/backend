@@ -8,10 +8,10 @@ const { createCategoryValidator, updateCategoryValidator } = require("../../vali
 const { errorWrapper } = require("../../utils/errorWrapper");
 const { validationError } = require('../../utils/validationError');
 
-router.post("/",/* checkAuth, checkPermission,*/ createCategoryValidator, validationError, errorWrapper(insertCategory));
-router.get("/",/* checkAuth, checkPermission,*/ errorWrapper(fetchAllCategories));
-router.get("/:id",/* checkAuth, checkPermission,*/ errorWrapper(fetchCategoryById));
-router.put("/:id",/* checkAuth, checkPermission,*/ updateCategoryValidator, validationError, errorWrapper(modifyCategoryById));
-router.delete("/:id",/* checkAuth, checkPermission,*/ errorWrapper(removeCategory));
+router.post("/", checkAuth, checkPermission, createCategoryValidator, validationError, errorWrapper(insertCategory));
+router.get("/", checkAuth, checkPermission, errorWrapper(fetchAllCategories));
+router.get("/:id", checkAuth, checkPermission, errorWrapper(fetchCategoryById));
+router.put("/:id", checkAuth, checkPermission, updateCategoryValidator, validationError, errorWrapper(modifyCategoryById));
+router.delete("/:id", checkAuth, checkPermission, errorWrapper(removeCategory));
 
 module.exports = router;

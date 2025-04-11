@@ -8,10 +8,10 @@ const { createProjectValidator, updateProjectValidator } = require("../../valida
 const { errorWrapper } = require("../../utils/errorWrapper");
 const { validationError } = require('../../utils/validationError');
 
-router.post("/", /* checkAuth, checkPermission,*/ createProjectValidator, validationError, errorWrapper(insertProject));
-router.get("/", /* checkAuth, checkPermission,*/ errorWrapper(fetchAllProjects));
-router.get("/:id", /* checkAuth, checkPermission,*/ errorWrapper(fetchProjectById));
-router.put("/:id", /* checkAuth, checkPermission,*/ updateProjectValidator, validationError, errorWrapper(modifyProjectById));
-router.delete("/:id", /* checkAuth, checkPermission,*/ errorWrapper(removeProject));
+router.post("/",   checkAuth, checkPermission,  createProjectValidator, validationError, errorWrapper(insertProject));
+router.get("/",   checkAuth, checkPermission,  errorWrapper(fetchAllProjects));
+router.get("/:id",   checkAuth, checkPermission,  errorWrapper(fetchProjectById));
+router.put("/:id",   checkAuth, checkPermission,  updateProjectValidator, validationError, errorWrapper(modifyProjectById));
+router.delete("/:id",   checkAuth, checkPermission,  errorWrapper(removeProject));
 
 module.exports = router;
