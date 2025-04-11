@@ -4,6 +4,7 @@ const db = require("../models/index");
 const handleSuccess = require("../../utils/successHandler");
 const commonFunction = require('../../utils/commonFunctions');
 const { DataNotFoundError, BadRequestError } = require("../../utils/customError");
+const moment = require('moment');
 
 exports.createTask = async (body) => {
 
@@ -19,6 +20,14 @@ exports.createTask = async (body) => {
   }
 
   const task = await db.task.create(body);
+
+  // if start date is today's date then task recurrence should be created 
+  if(moment(body.startDate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')){
+    body.taskId = task._id;
+    delete recurrence;
+    await db.task_recurrence.create(body);
+  }   
+
   if (!task) throw new BadRequestError("Failed to create task");
   return handleSuccess("Task created successfully");
 };
@@ -109,12 +118,23 @@ exports.getAllTasks = async (query) => {
 };
 
 exports.getTaskById = async (_id) => {
-  const result = await db.task.findById(_id);
+  const result = await db.task
+              .findById(_id);
   if (!result) throw new DataNotFoundError("Task not found");
   return handleSuccess("Task fetched successfully", result);
 };
 
 exports.updateTaskById = async (_id, body) => {
+
+  // check if provided assigend to user id and projectId are valid or not
+  for(let i=0;i<body.assignedTo.length;i++){
+    if(!commonFunction.checkIfRecordExist(db.user, body.assignedTo[0])){
+      throw new BadRequestError(`User With Id ${body.assignedTo[0]} Not Found`)
+    }
+  }
+  if(body.projectId && !commonFunction.checkIfRecordExist(db.project, body.projectId)){
+    throw new BadRequestError(`Project With Id ${body.projectId} Not Found`)
+  }
   const result = await db.task.findByIdAndUpdate(_id, body, { new: true });
   if (!result) throw new BadRequestError("Failed to update task");
   return handleSuccess("Task updated successfully", result);
@@ -130,12 +150,3 @@ exports.deleteTaskById = async (_id) => {
   return handleSuccess("Task deleted successfully");
 };
 
-exports.completeTask = async (_id) => {
-  const result = await db.task.findByIdAndUpdate(
-    _id,
-    { status: "Completed", completedAt: new Date() },
-    { new: true }
-  );
-  if (!result) throw new BadRequestError("Failed to complete task");
-  return handleSuccess("Task completed successfully");
-};
