@@ -66,6 +66,8 @@ backend/
 │   └── services/
 ├── utiles/
 ├── utils/
+├── docs/
+│   └── postman_collection.json
 ├── validators/
 ├── app.js
 └── README.md
