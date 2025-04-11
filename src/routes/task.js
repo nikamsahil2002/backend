@@ -5,11 +5,12 @@ const checkPermission = require('../middlewares/checkPermission');
 const { errorWrapper } = require("../../utils/errorWrapper");
 const { insertTask, fetchTaskById, fetchTasks, modifyTask, removeTask } = require("../controllers/task");
 const { createTaskValidator, updateTaskValidator } = require("../../validators/task");
+const { validationError } = require('../../utils/validationError');
 
-router.post('/', checkAuth, checkPermission, createTaskValidator, errorWrapper(insertTask));
-router.get('/', checkAuth, checkPermission, errorWrapper(fetchTasks));
-router.get('/:id', checkAuth, checkPermission, errorWrapper(fetchTaskById));
-router.put('/:id', checkAuth, checkPermission, updateTaskValidator, errorWrapper(modifyTask));
-router.delete('/:id', checkAuth, checkPermission, errorWrapper(removeTask));
+router.post('/',/* checkAuth, checkPermission,*/ createTaskValidator, validationError, errorWrapper(insertTask));
+router.get('/',/* checkAuth, checkPermission,*/ errorWrapper(fetchTasks));
+router.get('/:id',/* checkAuth, checkPermission,*/ errorWrapper(fetchTaskById));
+router.put('/:id',/* checkAuth, checkPermission,*/ updateTaskValidator, validationError, errorWrapper(modifyTask));
+router.delete('/:id',/* checkAuth, checkPermission,*/ errorWrapper(removeTask));
 
 module.exports = router;

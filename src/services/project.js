@@ -7,11 +7,12 @@ const commonFunction = require('../../utils/commonFunctions');
 
 
 exports.createProject = async (body) => {
+
   // first check provided team and category are valid or not
-  if(commonFunction.checkIfRecordExist(db.team, body.assignedTo)){
+  if(!commonFunction.checkIfRecordExist(db.team, body.assignedTo)){
     throw new BadRequestError(`Team With Id ${body.assignedTo} Not Found`)
   }
-  if(commonFunction.checkIfRecordExist(db.category, body.category)){
+  if(!commonFunction.checkIfRecordExist(db.category, body.category)){
     throw new BadRequestError(`Category With Id ${body.category} Not Found`)
   }
 
@@ -131,10 +132,10 @@ exports.getProjectById = async (_id) => {
 
 exports.updateProjectById = async (_id, body) => {
   // first check provided team and category are valid or not
-  if(body.assignedTo && commonFunction.checkIfRecordExist(db.team, body.assignedTo)){
+  if(body.assignedTo && !commonFunction.checkIfRecordExist(db.team, body.assignedTo)){
     throw new BadRequestError(`Team With Id ${body.assignedTo} Not Found`)
   }
-  if(body.category && commonFunction.checkIfRecordExist(db.category, body.category)){
+  if(body.category && !commonFunction.checkIfRecordExist(db.category, body.category)){
     throw new BadRequestError(`Category With Id ${body.category} Not Found`)
   }
 

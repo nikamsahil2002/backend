@@ -1,97 +1,130 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
+const mongoose = require("mongoose");
 
-const createTaskValidator = [
+exports.createTaskValidator = [
   body("title")
     .notEmpty()
-    .withMessage("Title is required"),
+    .withMessage("Title is required")
+    .isString()
+    .withMessage("Title must be a string"),
+
+  body("description")
+    .notEmpty()
+    .withMessage("Description is required")
+    .isString()
+    .withMessage("Description must be a string"),
+
+  body("projectId")
+    .notEmpty()
+    .withMessage("Project ID is required")
+    .isMongoId()
+    .withMessage("Project ID must be a valid MongoDB ObjectId"),
+
+  body("media")
+    .optional()
+    .isString()
+    .withMessage("Media must be a string"),
+
+  body("priority")
+    .notEmpty()
+    .withMessage("Priority is required")
+    .isIn(["High", "Medium", "Low"])
+    .withMessage("Priority must be one of: High, Medium, Low"),
+
+  body("assignedTo")
+    .isArray({ min: 1 })
+    .withMessage("assignedTo must be a non-empty array")
+    .custom((members) => {
+      for (const member of members) {
+        if (!mongoose.Types.ObjectId.isValid(member)) {
+          throw new Error("Each assignedTo must be a valid MongoDB ObjectId");
+        }
+      }
+      return true;
+    }),
+
+  body("recurrence")
+    .optional()
+    .isIn(["once", "daily", "weekly", "monthly"])
+    .withMessage("Recurrence must be one of: once, daily, weekly, monthly"),
+
+  body("estimatedTime")
+    .optional()
+    .isNumeric()
+    .withMessage("Estimated time must be a number"),
+
+  body("startDate")
+    .notEmpty()
+    .withMessage("Start Date is required")
+    .isISO8601()
+    .withMessage("Start Date must be a valid ISO date"),
+
+  body("dueDate")
+    .optional()
+    .isISO8601()
+    .withMessage("Due date must be a valid ISO date"),
+];
+
+exports.updateTaskValidator = [
+  param("id")
+    .isMongoId()
+    .withMessage("Invalid task ID format"),
+
+  body("title")
+    .optional()
+    .isString()
+    .withMessage("Title must be a string"),
+
   body("description")
     .optional()
     .isString()
-    .withMessage("Description must be string"),
-  body("category")
+    .withMessage("Description must be a string"),
+
+  body("projectId")
     .optional()
     .isMongoId()
-    .withMessage("Category must be a valid ID"),
-  body("project")
+    .withMessage("Project ID must be a valid MongoDB ObjectId"),
+
+  body("media")
     .optional()
-    .isMongoId()
-    .withMessage("Project must be a valid ID"),
-  body("media").optional().isURL().withMessage("Media must be a valid URL"),
+    .isString()
+    .withMessage("Media must be a string"),
+
   body("priority")
     .optional()
     .isIn(["High", "Medium", "Low"])
-    .withMessage("Priority must be High, Medium, or Low"),
+    .withMessage("Priority must be one of: High, Medium, Low"),
+
+  body("assignedTo")
+    .optional()
+    .isArray()
+    .withMessage("assignedTo must be an array")
+    .custom((members) => {
+      for (const member of members) {
+        if (!mongoose.Types.ObjectId.isValid(member)) {
+          throw new Error("Each assignedTo must be a valid MongoDB ObjectId");
+        }
+      }
+      return true;
+    }),
+
+  body("recurrence")
+    .optional()
+    .isIn(["once", "daily", "weekly", "monthly"])
+    .withMessage("Recurrence must be one of: once, daily, weekly, monthly"),
+
   body("estimatedTime")
     .optional()
     .isNumeric()
     .withMessage("Estimated time must be a number"),
-  body("assignedTo")
-    .optional()
-    .isMongoId()
-    .withMessage("AssignedTo must be a valid user ID"),
-  body("status")
-    .optional()
-    .isIn(["Not started", "In progress", "done"])
-    .withMessage("Invalid status"),
-  body("completedAt")
+
+  body("startDate")
     .optional()
     .isISO8601()
-    .toDate()
-    .withMessage("CompletedAt must be a valid date"),
+    .withMessage("Start date must be a valid ISO date"),
+
   body("dueDate")
     .optional()
     .isISO8601()
-    .toDate()
-    .withMessage("DueDate must be a valid date"),
+    .withMessage("Due date must be a valid ISO date"),
 ];
-
-const updateTaskValidator = [
-  body("title")
-    .optional()
-    .notEmpty()
-    .withMessage("Title cannot be empty"),
-  body("description")
-    .optional()
-    .notEmpty()
-    .withMessage("Description cannot be empty"),
-  body("category")
-    .optional()
-    .isMongoId()
-    .withMessage("Category must be a valid ID"),
-  body("project")
-    .optional()
-    .isMongoId()
-    .withMessage("Project must be a valid ID"),
-  body("media").optional().isURL().withMessage("Media must be a valid URL"),
-  body("priority")
-    .optional()
-    .isIn(["High", "Medium", "Low"])
-    .withMessage("Priority must be High, Medium, or Low"),
-  body("estimatedTime")
-    .optional()
-    .isNumeric()
-    .withMessage("Estimated time must be a number"),
-  body("assignedTo")
-    .optional()
-    .isMongoId()
-    .withMessage("AssignedTo must be a valid user ID"),
-  body("status")
-    .optional()
-    .isIn(["Not started", "In progress", "done"])
-    .withMessage("Invalid status"),
-  body("completedAt")
-    .optional()
-    .isISO8601()
-    .toDate()
-    .withMessage("CompletedAt must be a valid date"),
-  body("dueDate")
-    .optional()
-    .isISO8601()
-    .toDate()
-    .withMessage("DueDate must be a valid date"),
-];
-
-module.exports = {
-  createTaskValidator,
-  updateTaskValidator,
-};

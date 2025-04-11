@@ -27,8 +27,8 @@ const findAll = async (collection, searchQuery, sortObject, skip, limit, project
     return result;
 }
 
-const checkIfRecordExist = async(collection, id) => {
-  const result = await collection.findById(id);
+const checkIfRecordExist = async(collection, _id) => {
+  const result = await collection.findById(_id);
   return result ? true : false;
 }
 
