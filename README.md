@@ -27,43 +27,6 @@ This repository contains the backend implementation for managing users, projects
 - express-validator
 - dotenv
 
-## 📦 Getting Started
-
-### Prerequisites
-
-- Node.js and npm installed
-- MongoDB running
-- Redis running
-
-# Task Management
-
-This repository contains the backend implementation for managing users, projects, tasks, and categories.
-
-> 🔄 **Note:**  
-> - The main development code is in the `development` branch.  
-> - The `test` branch is for testing purposes.  
-> - The `main` branch is not actively used for latest updates.
-
-## 🚀 Features
-
-- User Authentication with JWT
-- Role-Based Access Control (RBAC)
-- Efficient Aggregation Pipelines for Optimized GET Requests
-- Redis Implementation for Token Storage
-- Common Reusable Utility Functions
-- Proper Validation with express-validator
-- Centralized and Structured Error Handling
-
-## 🛠 Technologies Used
-
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- Redis
-- JWT
-- express-validator
-- dotenv
-
 🧠 Project Logic & Approach
 🔐 Role-Based Access Control (RBAC)
 Each user has a role (Admin, Manager, Team Lead, Member).
