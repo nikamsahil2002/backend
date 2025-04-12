@@ -1,5 +1,5 @@
 const response = require("../../utils/response");
-const { createProject, getAllProjects, getProjectById, updateProjectById, deleteProjectById } = require("../services/project");
+const { createProject, getAllProjects, getProjectById, updateProjectById, deleteProjectById, updateProjectStatusById, getAllProjectsProgress } = require("../services/project");
 
 exports.insertProject = async (req, res) => {
   const result = await createProject(req.body);
@@ -23,5 +23,15 @@ exports.modifyProjectById = async (req, res) => {
 
 exports.removeProject = async (req, res) => {
   const result = await deleteProjectById(req.params.id);
+  return response.ok(res, result);
+};
+
+exports.updateProjectStatus = async (req, res) => {
+  const result = await updateProjectStatusById(req.params.id, req.body);
+  return response.ok(res, result);
+};
+
+exports.fetchProjectProgress = async (req, res) => {
+  const result = await getAllProjectsProgress(req.query);
   return response.ok(res, result);
 };

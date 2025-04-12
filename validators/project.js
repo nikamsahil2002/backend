@@ -103,3 +103,15 @@ exports.updateProjectValidator = [
         .isISO8601()
         .withMessage("Completed date must be a valid date"),
 ];
+
+exports.validateProjectStatus = [
+  param("id")
+    .isMongoId()
+    .withMessage("Invalid Task Recurrence ID format"),
+
+  body("status")
+    .notEmpty()
+    .withMessage("Text is required")
+    .isIn(["Not Started", "In Progress", "Completed"])
+    .withMessage('Invalid type value'),
+];
