@@ -21,11 +21,12 @@ exports.createTask = async (body) => {
 
   const task = await db.task.create(body);
 
-  // if start date is today's date then task recurrence should be created 
+  // if start date is today's date then task recurrence will be created 
   if(moment(body.startDate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')){
     body.taskId = task._id;
     delete recurrence;
     await db.task_recurrence.create(body);
+    commonFunction.taskNotification(task._id);  // send task notification
   }   
 
   if (!task) throw new BadRequestError("Failed to create task");

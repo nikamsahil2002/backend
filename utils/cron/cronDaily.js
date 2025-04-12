@@ -1,5 +1,6 @@
 const db = require('../../src/models/index');
 const moment = require("moment");
+const commonFunction = require('../commonFunctions');
 
 exports.cronDaily = async () => {
     const tasks = await db.task.find().handleWeeklyTasklean();
@@ -21,6 +22,9 @@ function handleDailyTask(tasks) {
     });
 
     db.task_recurrence.create(bodyArray);
+    for(let i=0;i<tasks.length;i++){
+        commonFunction.taskNotification(tasks[i]._id);
+    }
 }
 
 function handleWeeklyTask(tasks) {
@@ -35,6 +39,9 @@ function handleWeeklyTask(tasks) {
     })
 
     db.task_recurrence.create(bodyArray);
+    for(let i=0;i<tasks.length;i++){
+        commonFunction.taskNotification(tasks[i]._id);
+    }
 }
 
 function handleMonthlyTask(tasks) {
@@ -48,6 +55,9 @@ function handleMonthlyTask(tasks) {
         return rest;
     });
 
-    db.task_recurrence.create(bodyArray)
+    db.task_recurrence.create(bodyArray);
+    for(let i=0;i<tasks.length;i++){
+        commonFunction.taskNotification(tasks[i]._id);
+    }
 }
 

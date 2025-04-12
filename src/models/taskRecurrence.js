@@ -74,5 +74,4 @@ const taskRecurrenceSchema = new Schema(
   }
 );
 
-const task = mongoose.model("task_recurrence", taskRecurrenceSchema);
-module.exports = task;
+module.exports = mongoose.model("task_recurrence", taskRecurrenceSchema);
