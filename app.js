@@ -5,6 +5,7 @@ const cors = require("cors");
 require('dotenv').config(true);
 
 var indexRouter = require('./src/routes/index');
+const { dailyCron } = require('./utils/cron/cron');
 
 var app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -18,6 +19,8 @@ app.use('/api', indexRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+dailyCron(); // daily cron function for task recurremce
 
 // error handler
 app.use(function(err, req, res, next) {

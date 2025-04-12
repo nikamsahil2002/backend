@@ -15,11 +15,12 @@ exports.cronDaily = async () => {
 
 function handleDailyTask(tasks) {
     const bodyArray = tasks.map((t) => {
-        const { createdAt, updatedAt, status, ...rest } = t;
+        const { createdAt, updatedAt, recurrence, ...rest } = t;
+        rest.taskId = t._id;
         return rest;
     });
 
-    db.task.create(bodyArray);
+    db.task_recurrence.create(bodyArray);
 }
 
 function handleWeeklyTask(tasks) {
@@ -28,11 +29,12 @@ function handleWeeklyTask(tasks) {
     const filteredTasks = tasks.filter(t => moment(t.createdAt).isBefore(oneWeekAgo));
 
     const bodyArray = filteredTasks.map(t => {
-        const {createdAt, updatedAt, status, ...rest} = t;
+        const { createdAt, updatedAt, recurrence, ...rest} = t;
+        rest.taskId = t._id;
         return rest;
     })
 
-    db.task.create(bodyArray);
+    db.task_recurrence.create(bodyArray);
 }
 
 function handleMonthlyTask(tasks) {
@@ -41,10 +43,11 @@ function handleMonthlyTask(tasks) {
     const filteredTasks = tasks.filter(t => moment(t.createdAt).isBefore(oneMonthAgo));
 
     const bodyArray = filteredTasks.map((t) => {
-        const { createdAt, updatedAt, status, ...rest } = t;
+        const { createdAt, updatedAt, recurrence, ...rest } = t;
+        rest.taskId = t._id;
         return rest;
     });
 
-    db.task.create(bodyArray)
+    db.task_recurrence.create(bodyArray)
 }
 

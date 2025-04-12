@@ -17,7 +17,7 @@ exports.getAllTasksRecurrences = async (query) => {
   const assignedTo = query.assignedTo;
   const project = query.project;
   const priority = query.priority;
-  const recurrence = query.recurrence;
+  const status = query.status;
   const startDate = query.startDate;
 
   const searchQuery = {
@@ -25,7 +25,7 @@ exports.getAllTasksRecurrences = async (query) => {
       ...( project ? [ { "project._id" : new ObjectId(project)} ]: [] ),
       ...( assignedTo ? [ { "assignedTo._id" : new ObjectId(assignedTo)} ]: [] ),
       ...( priority ? [ { priority : priority } ]: [] ),
-      ...( recurrence ? [ { recurrence : recurrence } ]: [] ),
+      ...( status ? [ { status : status } ]: [] ),
       ...( startDate ? [ { startDate : { $gte: moment(startDate).format("YYYY-MM-DD HH:mm:ss") } } ]: [] ),
       {
         $or: [
