@@ -805,7 +805,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"Design Homepage\",\r\n  \"description\": \"Create wireframes and mockups for the homepage.\",\r\n  \"projectId\": \"67f8bb48cf85417e0802862f\",\r\n  \"media\": \"https://example.com/media/homepage-mockup.png\",\r\n  \"priority\": \"High\",\r\n  \"assignedTo\": [\r\n    \"67f7941707eafae1f80b0622\"\r\n  ],\r\n  \"recurrence\": \"once\",\r\n  \"estimatedTime\": 12,\r\n  \"startDate\": \"2025-04-12T09:00:00Z\",\r\n  \"dueDate\": \"2025-04-20T17:00:00Z\"\r\n}\r\n",
+					"raw": "{\r\n  \"title\": \"Design Homepage\",\r\n  \"description\": \"Create wireframes and mockups for the homepage.\",\r\n  \"projectId\": \"67f8bb48cf85417e0802862f\",\r\n  \"media\": \"https://example.com/media/homepage-mockup.png\",\r\n  \"priority\": \"High\",\r\n  \"assignedTo\": [\r\n    \"67f7941707eafae1f80b0622\"\r\n  ],\r\n  \"recurrence\": \"once\",\r\n  \"estimatedTime\": 12,\r\n  \"startDate\": \"2025-04-11T09:00:00Z\",\r\n  \"dueDate\": \"2025-04-20T17:00:00Z\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -822,6 +822,231 @@
 					"path": [
 						"api",
 						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/api/task?assignedTo=67f7941707eafae1f80b0622",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"task"
+					],
+					"query": [
+						{
+							"key": "assignedTo",
+							"value": "67f7941707eafae1f80b0622"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "task Update",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\" : \"new title\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3003/api/task/67f90cba9ae820399e889be7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"task",
+						"67f90cba9ae820399e889be7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task By Id",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/api/task/67f90cba9ae820399e889be7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"task",
+						"67f90cba9ae820399e889be7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/api/task/67f90cba9ae820399e889be7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"task",
+						"67f90cba9ae820399e889be7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get All taskRecurrence",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/api/taskRecurrence",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"taskRecurrence"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get taskRecurrence By ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/api/taskRecurrence/67f90cba9ae820399e889beb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"taskRecurrence",
+						"67f90cba9ae820399e889beb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Comments To task",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Hello\",\r\n    \"createdBy\": \"67f7941707eafae1f80b0622\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3003/api/taskRecurrence/67f90cba9ae820399e889beb/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"taskRecurrence",
+						"67f90cba9ae820399e889beb",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update taskRecurrence status",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"In Progress\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3003/api/taskRecurrence/67f90cba9ae820399e889beb/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"api",
+						"taskRecurrence",
+						"67f90cba9ae820399e889beb",
+						"status"
 					]
 				}
 			},
