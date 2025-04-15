@@ -6,7 +6,7 @@ const env_vars = require('./config')[env];
 
 const connectToDatabase = async () => {
   mongoose
-    .connect(env_vars.connection_url)
+    .connect("mongodb+srv://sahil:Admin%40123@cluster0.izcms3r.mongodb.net/task-manager?retryWrites=true&w=majority&appName=Cluster0")
     .then(() => {
       console.log(`MongoDB Connected ${env_vars.connection_url}`);
     })
