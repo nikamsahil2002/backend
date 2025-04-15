@@ -32,6 +32,10 @@ const taskRecurrenceSchema = new Schema(
         ref: "user",
         required: true
     }],
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "user"
+    },
     status: {
       type: String,
       enum: ["Not Started", "In Progress", "Completed"],

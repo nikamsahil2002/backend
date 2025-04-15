@@ -3,7 +3,7 @@ const { getAllTasksRecurrences, getTaskRecurrenceById, addComments, updateTaskSt
 
 
 exports.fetchTaskRecurrences = async (req, res) => {
-  const result = await getAllTasksRecurrences(req.query);
+  const result = await getAllTasksRecurrences(req.query, req.userData.roleName, req.userData.id);
   return response.ok(res, result);
 };
 

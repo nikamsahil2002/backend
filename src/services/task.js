@@ -6,7 +6,7 @@ const commonFunction = require('../../utils/commonFunctions');
 const { DataNotFoundError, BadRequestError } = require("../../utils/customError");
 const moment = require('moment');
 
-exports.createTask = async (body) => {
+exports.createTask = async (body, userId) => {
 
   // check if provided assigend to user id and projectId are valid or not
   for(let i=0;i<body.assignedTo.length;i++){
@@ -19,11 +19,13 @@ exports.createTask = async (body) => {
     throw new BadRequestError(`Project With Id ${body.projectId} Not Found`)
   }
 
+  body.createdBy = userId;
   const task = await db.task.create(body);
 
   // if start date is today's date then task recurrence will be created 
   if(moment(body.startDate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')){
     body.taskId = task._id;
+    body.dueDate = moment().add(moment.duration(task.estimatedTime || 0, 'hours')).toISOString(),
     delete recurrence;
     await db.task_recurrence.create(body);
     commonFunction.taskNotification(task._id);  // send task notification
@@ -33,7 +35,7 @@ exports.createTask = async (body) => {
   return handleSuccess("Task created successfully");
 };
 
-exports.getAllTasks = async (query) => {
+exports.getAllTasks = async (query, roleName, userId) => {
   const pageNumber = parseInt(query.pageNumber) || 1;
   const limit = parseInt(query.limit) || 10;
   const skip = (pageNumber - 1) * limit;
@@ -45,6 +47,11 @@ exports.getAllTasks = async (query) => {
   const priority = query.priority;
   const recurrence = query.recurrence;
   const startDate = query.startDate;
+  let createdBy;
+
+  if(roleName === 'admin'){ // by pass admin else show manager only tasks which are created by that manager
+    createdBy = userId; 
+  }
 
   const searchQuery = {
     $and: [
@@ -53,6 +60,7 @@ exports.getAllTasks = async (query) => {
       ...( priority ? [ { priority : priority } ]: [] ),
       ...( recurrence ? [ { recurrence : recurrence } ]: [] ),
       ...( startDate ? [ { startDate : { $gte: moment(startDate).format("YYYY-MM-DD HH:mm:ss") } } ]: [] ),
+      ...( createdBy ? [ { "createdBy._id" : createdBy } ]: [] ),
       {
         $or: [
           { title: { $regex: search, $options: "i" } },
@@ -69,8 +77,12 @@ exports.getAllTasks = async (query) => {
     "project.description": 1,
     media: 1,
     priority: 1,
+    "assignedTo._id": 1,
     "assignedTo.firstName": 1,
     "assignedTo.lastName": 1,
+    "createdBy._id": 1,
+    "createdBy.firstName": 1,
+    "createdBy.lastName": 1,
     recurrence: 1,
     startDate: 1,
     estimatedTime: 1,
@@ -96,7 +108,17 @@ exports.getAllTasks = async (query) => {
           as : 'assignedTo'
         }
     },
+    {
+      $lookup : {
+        from : 'users',
+        localField : 'createdBy',
+        foreignField : '_id',
+        as : 'createdBy'
+      }
+    },
     { $unwind : "$project" },
+    { $unwind : "$createdBy" },
+
   ]
 
   const sortObject = {};

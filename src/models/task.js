@@ -28,6 +28,10 @@ const taskSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: "user"
     }],
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "user"
+    },
     recurrence: {
         type: String,
         enum: ["once", "daily", "weekly", "monthly"],

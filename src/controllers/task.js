@@ -3,12 +3,12 @@ const { createTask, getAllTasks, getTaskById, updateTaskById, deleteTaskById, co
 
 
 exports.insertTask = async (req, res) => {
-  const result = await createTask(req.body);
+  const result = await createTask(req.body, req.userData.id);
   return response.created(res, result);
 };
 
 exports.fetchTasks = async (req, res) => {
-  const result = await getAllTasks(req.query);
+  const result = await getAllTasks(req.query, req.userData.roleName, req.userData.id);
   return response.ok(res, result);
 };
 

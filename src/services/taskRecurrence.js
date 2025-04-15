@@ -7,23 +7,30 @@ const { DataNotFoundError, BadRequestError } = require("../../utils/customError"
 const moment = require('moment');
 
 
-exports.getAllTasksRecurrences = async (query) => {
+exports.getAllTasksRecurrences = async (query, roleName, userId) => {
   const pageNumber = parseInt(query.pageNumber) || 1;
   const limit = parseInt(query.limit) || 10;
   const skip = (pageNumber - 1) * limit;
   const search = query.search || "";
   const sortOrder = parseInt(query.sortOrder) || -1;
   const sortField = query.sortField || "updatedAt";
-  const assignedTo = query.assignedTo;
+  let assignedTo;
   const project = query.project;
   const priority = query.priority;
   const status = query.status;
   const startDate = query.startDate;
 
+  if(roleName !== 'admin'){  // by pass admin else show user only tasks which are assigned to their team
+    assignedTo = userId;
+  }
+  else if(query.assignedTo){
+    assignedTo = new ObjectId(query.assignedTo);
+  }
+
   const searchQuery = {
     $and: [
       ...( project ? [ { "project._id" : new ObjectId(project)} ]: [] ),
-      ...( assignedTo ? [ { "assignedTo._id" : new ObjectId(assignedTo)} ]: [] ),
+      ...( assignedTo ? [ { "assignedTo._id" : assignedTo } ]: [] ),
       ...( priority ? [ { priority : priority } ]: [] ),
       ...( status ? [ { status : status } ]: [] ),
       ...( startDate ? [ { startDate : { $gte: moment(startDate).format("YYYY-MM-DD HH:mm:ss") } } ]: [] ),
@@ -43,8 +50,12 @@ exports.getAllTasksRecurrences = async (query) => {
     "project.description": 1,
     media: 1,
     priority: 1,
+    "assignedTo._id": 1,
     "assignedTo.firstName": 1,
     "assignedTo.lastName": 1,
+    "createdBy._id": 1,
+    "createdBy.firstName": 1,
+    "createdBy.lastName": 1,
     recurrence: 1,
     startDate: 1,
     status: 1,
@@ -72,7 +83,17 @@ exports.getAllTasksRecurrences = async (query) => {
           as : 'assignedTo'
         }
     },
+    {
+      $lookup : {
+        from : 'users',
+        localField : 'createdBy',
+        foreignField : '_id',
+        as : 'createdBy'
+      }
+    },
     { $unwind : "$project" },
+    { $unwind : "$createdBy" },
+
   ]
 
   const sortObject = {};

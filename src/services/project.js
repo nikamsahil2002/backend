@@ -23,7 +23,7 @@ exports.createProject = async (body) => {
   return handleSuccess("Project created successfully");
 };
 
-exports.getAllProjects = async (query) => {
+exports.getAllProjects = async (query, roleName, userId) => {
   const pageNumber = parseInt(query.pageNumber) || 1;
   const limit = parseInt(query.limit) || 10;
   const skip = (pageNumber - 1) * limit;
@@ -31,14 +31,28 @@ exports.getAllProjects = async (query) => {
   const sortOrder = parseInt(query.sortOrder) || -1;
   const sortField = query.sortField || "updatedAt";
   const category = query.category;
-  const assignedTo = query.assignedTo;
+  let assignedTo = query.assignedTo;
   const status = query.status;
   const startDate = query.startDate;
+
+  if(roleName !== 'admin'){ // by pass admin else show manager only projects which are assigned to their team
+    const teams = await db.team.find({ members: { $in: [ userId ] } });
+    if(teams.length == 0){
+      throw new BadRequestError("You are not assigned to any team.");
+    }
+    assignedTo = [];
+    for(let i=0;i<teams.length;i++){
+      assignedTo.push(teams[i]._id);
+    }
+  }
+  else if(assignedTo){
+    assignedTo = [ new ObjectId(assignedTo) ]; // make it array
+  }
 
   const searchQuery = {  // optional filter integrated in get api for category, assigned to team, status, start date and search
     $and: [
       ...( category ? [ { "category._id" : new ObjectId(category)} ]: [] ),
-      ...( assignedTo ? [ { "assignedTo._id" : new ObjectId(category)} ]: [] ),
+      ...( assignedTo ? [ { "assignedTo._id" : { $in: assignedTo } } ]: [] ),
       ...( status ? [ { status : status} ]: [] ),
       ...( startDate ? [ { startDate : { $gte: moment(startDate).format("YYYY-MM-DD HH:mm:ss") } } ]: [] ),
       {
