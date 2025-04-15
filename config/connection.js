@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const env = process.env.NODE_ENV || 'development';
 console.log("Running Envirenment ", env);
-const env_vars = require('./config')[env];
+// const env_vars = require('./config')[env];
 
 const connectToDatabase = async () => {
   mongoose
