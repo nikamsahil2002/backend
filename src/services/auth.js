@@ -1,6 +1,6 @@
 const db = require('../models');
 const moment = require("moment");
-const client = require('../../config/redis');
+// const client = require('../../config/redis');
 const sendEmail = require('../../utils/email')
 const { generateToken } = require('../../utils/jwt')
 const { BadRequestError, ValidationError, DataNotFoundError } = require('../../utils/customError');
@@ -55,7 +55,7 @@ exports.logoutService = async (userId, token) => {
         { deletedAt: Date.now() }
     );
     
-    await client.del(token);
+    // await client.del(token);
 
     return handleSuccess('Logged Out Successfully');
 }
