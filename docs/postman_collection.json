@@ -61,7 +61,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/user",
+					"raw": " https://backend-y5pk.onrender.com/api/user",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -84,7 +84,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/user",
+					"raw": " https://backend-y5pk.onrender.com/api/user",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -107,7 +107,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/user/67f7941707eafae1f80b0622",
+					"raw": " https://backend-y5pk.onrender.com/api/user/67f7941707eafae1f80b0622",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -140,7 +140,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/user/67f7941707eafae1f80b0622",
+					"raw": " https://backend-y5pk.onrender.com/api/user/67f7941707eafae1f80b0622",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -164,7 +164,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/user/67f7941707eafae1f80b0622",
+					"raw": " https://backend-y5pk.onrender.com/api/user/67f7941707eafae1f80b0622",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -197,7 +197,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/auth/log-in",
+					"raw": " https://backend-y5pk.onrender.com/api/auth/log-in",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -237,7 +237,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/auth/log-out",
+					"raw": " https://backend-y5pk.onrender.com/api/auth/log-out",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -270,7 +270,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/auth/forgot-password",
+					"raw": " https://backend-y5pk.onrender.com/api/auth/forgot-password",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -303,7 +303,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/auth/verify-otp",
+					"raw": " https://backend-y5pk.onrender.com/api/auth/verify-otp",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -336,7 +336,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/auth/reset-password",
+					"raw": " https://backend-y5pk.onrender.com/api/auth/reset-password",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -369,7 +369,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/category",
+					"raw": " https://backend-y5pk.onrender.com/api/category",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -392,7 +392,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/category",
+					"raw": " https://backend-y5pk.onrender.com/api/category",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -424,7 +424,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/category/67f7d0c280a15ae4cc620bcc",
+					"raw": " https://backend-y5pk.onrender.com/api/category/67f7d0c280a15ae4cc620bcc",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -448,7 +448,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/category/67f7d0c280a15ae4cc620bcc",
+					"raw": " https://backend-y5pk.onrender.com/api/category/67f7d0c280a15ae4cc620bcc",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -472,7 +472,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/category/67f7d0c280a15ae4cc620bcc",
+					"raw": " https://backend-y5pk.onrender.com/api/category/67f7d0c280a15ae4cc620bcc",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -505,7 +505,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/team",
+					"raw": " https://backend-y5pk.onrender.com/api/team",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -537,7 +537,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/auth/reset-password",
+					"raw": " https://backend-y5pk.onrender.com/api/auth/reset-password",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -573,7 +573,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/team",
+					"raw": " https://backend-y5pk.onrender.com/api/team",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -596,7 +596,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/team/67f82c46629727a9514b5e23",
+					"raw": " https://backend-y5pk.onrender.com/api/team/67f82c46629727a9514b5e23",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -629,7 +629,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/team/67f82c46629727a9514b5e23",
+					"raw": " https://backend-y5pk.onrender.com/api/team/67f82c46629727a9514b5e23",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -662,7 +662,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/project",
+					"raw": " https://backend-y5pk.onrender.com/api/project",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -685,7 +685,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/project?status=In Progress",
+					"raw": " https://backend-y5pk.onrender.com/api/project?status=In Progress",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -714,7 +714,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/project/67f8bb48cf85417e0802862f",
+					"raw": " https://backend-y5pk.onrender.com/api/project/67f8bb48cf85417e0802862f",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -747,7 +747,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/project/67f8bb48cf85417e0802862f",
+					"raw": " https://backend-y5pk.onrender.com/api/project/67f8bb48cf85417e0802862f",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -780,7 +780,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/project/67f8bb48cf85417e0802862f",
+					"raw": " https://backend-y5pk.onrender.com/api/project/67f8bb48cf85417e0802862f",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -813,7 +813,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/task",
+					"raw": " https://backend-y5pk.onrender.com/api/task",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -836,7 +836,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/task?assignedTo=67f7941707eafae1f80b0622",
+					"raw": " https://backend-y5pk.onrender.com/api/task?assignedTo=67f7941707eafae1f80b0622",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -874,7 +874,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/task/67f90cba9ae820399e889be7",
+					"raw": " https://backend-y5pk.onrender.com/api/task/67f90cba9ae820399e889be7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -898,7 +898,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/task/67f90cba9ae820399e889be7",
+					"raw": " https://backend-y5pk.onrender.com/api/task/67f90cba9ae820399e889be7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -922,7 +922,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/task/67f90cba9ae820399e889be7",
+					"raw": " https://backend-y5pk.onrender.com/api/task/67f90cba9ae820399e889be7",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -946,7 +946,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/taskRecurrence",
+					"raw": " https://backend-y5pk.onrender.com/api/taskRecurrence",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -969,7 +969,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3003/api/taskRecurrence/67f90cba9ae820399e889beb",
+					"raw": " https://backend-y5pk.onrender.com/api/taskRecurrence/67f90cba9ae820399e889beb",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1002,7 +1002,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/taskRecurrence/67f90cba9ae820399e889beb/comments",
+					"raw": " https://backend-y5pk.onrender.com/api/taskRecurrence/67f90cba9ae820399e889beb/comments",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1036,7 +1036,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3003/api/taskRecurrence/67f90cba9ae820399e889beb/status",
+					"raw": " https://backend-y5pk.onrender.com/api/taskRecurrence/67f90cba9ae820399e889beb/status",
 					"protocol": "http",
 					"host": [
 						"localhost"
